@@ -1,0 +1,138 @@
+var can_highlight=true;
+
+window.addEventListener('keydown', function (e) {
+	if(event.ctrlKey && event.key == "Enter") {
+		e.preventDefault();
+		if (can_highlight==true){
+			can_highlight = false;
+		}
+		else{
+			can_highlight = true;
+		}
+	}
+    return false;
+});
+
+window.addEventListener('mouseover',function(e) {
+	if (can_highlight==true){
+    	applyMask(e.target);
+    }
+});
+
+window.addEventListener('mouseout', function(e) {
+    // clearMasks();
+});
+
+function applyMask(target) {
+	cloxest = target
+	if (target.id == ""){
+		x = true;
+		cloxest = target.closest("*");
+		while (x == true) {
+			cloxest = cloxest.parentNode;
+			if (cloxest.id != ""){
+				x = false;
+				console.log(cloxest);
+			}
+			if (cloxest == ""){
+				x = false;
+				return
+			}
+		}
+	}
+	if (typeof cloxest.id !== "undefined"){
+		document.title = "WebWatcher365_website_monitor:"+cloxest.id+":"+cloxest.nodeName
+	}
+    if(document.getElementsByClassName('highlight-wrap').length > 0) {
+        resizeMask(cloxest);
+    }else{
+        createMask(cloxest);
+    }
+    
+    if (cloxest != target){
+		if(document.getElementsByClassName('highlight-wrap2').length > 0) {
+		    resizeMask2(target);
+		}else{
+		    createMask2(target);
+		}
+	}
+	else{
+		clearMasks2()
+	}
+}
+
+function resizeMask2(target) {
+    var rect = target.getBoundingClientRect();
+    var hObj = document.getElementsByClassName('highlight-wrap2')[0];
+    hObj.style.top=window.pageYOffset+rect.top+"px";
+    hObj.style.width=rect.width+"px";
+    hObj.style.height=rect.height+"px";
+    hObj.style.left=rect.left+"px";
+   // hObj.style.WebkitTransition='top 0.2s';
+}
+
+function createMask2(target) {
+    var rect = target.getBoundingClientRect();
+    var hObj = document.createElement("div");
+    hObj.className = 'highlight-wrap2';
+    hObj.style.position='absolute';
+    hObj.style.top=rect.top+"px";
+    hObj.style.width=rect.width+"px";
+    hObj.style.height=rect.height+"px";
+    hObj.style.left=rect.left+"px";
+    hObj.style.backgroundColor = 'red';
+    hObj.style.opacity='0.5';
+    hObj.style.cursor='default';
+    hObj.style.pointerEvents='none';
+    //hObj.style.WebkitTransition='top 0.2s';
+    document.body.appendChild(hObj);
+}
+
+function resizeMask(target) {
+    var rect = target.getBoundingClientRect();
+    var hObj = document.getElementsByClassName('highlight-wrap')[0];
+    hObj.style.top=window.pageYOffset+rect.top+"px";
+    hObj.style.width=rect.width+"px";
+    hObj.style.height=rect.height+"px";
+    hObj.style.left=rect.left+"px";
+    hObj.style.WebkitTransition='top 0.2s';
+}
+
+function createMask(target) {
+    var rect = target.getBoundingClientRect();
+    var hObj = document.createElement("div");
+    hObj.className = 'highlight-wrap';
+    hObj.style.position='absolute';
+    hObj.style.top=rect.top+"px";
+    hObj.style.width=rect.width+"px";
+    hObj.style.height=rect.height+"px";
+    hObj.style.left=rect.left+"px";
+    hObj.style.backgroundColor = 'red';
+    hObj.style.opacity='0.5';
+    hObj.style.cursor='default';
+    hObj.style.pointerEvents='none';
+    hObj.style.WebkitTransition='top 0.2s';
+    document.body.appendChild(hObj);
+}
+
+function clearMasks() {
+    var hwrappersLength = document.getElementsByClassName("highlight-wrap").length;
+    var hwrappers = document.getElementsByClassName("highlight-wrap");
+    if(hwrappersLength > 0) {
+        for(var i=0; i<hwrappersLength; i++) {
+            console.log("Removing existing wrap");
+            hwrappers[i].remove();
+        }
+    }
+}
+
+function clearMasks2() {
+    var hwrappersLength = document.getElementsByClassName("highlight-wrap2").length;
+    var hwrappers = document.getElementsByClassName("highlight-wrap2");
+    if(hwrappersLength > 0) {
+        for(var i=0; i<hwrappersLength; i++) {
+            console.log("Removing existing wrap");
+            hwrappers[i].remove();
+        }
+    }
+}
